@@ -74,5 +74,3 @@ def test_successful_submit_student_registration_form():
             'Haryana Panipat',
         )
     )
-
-def test_commit
