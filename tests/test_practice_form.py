@@ -1,76 +1,35 @@
-from selene.support.shared import browser
-from selene import have, command
-import os
-import tests
+from demoqa_tests.model.pages import practice_form
 
 
 def test_successful_submit_student_registration_form():
-    browser.open('/automation-practice-form')
-    ads = browser.all('[id^=google_ads][id$=container__]')
-    ads.with_(timeout=10).should(have.size_greater_than_or_equal(3)).perform(
-        command.js.remove
-    )
-
-    if ads.with_(timeout=2).wait_until(have.size_greater_than_or_equal(2)):
-        ads.perform(command.js.remove)
+    practice_form.given_opened()
 
     # WHEN
-    browser.element('#firstName').type('Vladislav')
-    browser.element('#lastName').type('Kamenskiy')
-    browser.element('#userEmail').type('dje.fry@mail.ru')
-    browser.all('[name=gender]').element_by(have.value('Male')).element('..').click()
-    browser.element('#userNumber').type('9162754427')
-
-    browser.element('#dateOfBirthInput').click()
-    browser.element('.react-datepicker__year-select [value="1994"]').click()
-    browser.element('.react-datepicker__month-select [value="8"]').click()
-    browser.element(f'.react-datepicker__day--0{19}').click()
-
-    browser.element('#subjectsInput').type('en')
-    browser.all('[id^=react-select][id*=option]').element_by(
-        have.exact_text("English")
-    ).click()
-
-    browser.all('[for^=hobbies-checkbox]').element_by(have.text('Sports')).element(
-        '..'
-    ).click()
-    browser.all('[for^=hobbies-checkbox]').element_by(have.text('Music')).element(
-        '..'
-    ).click()
-
-    browser.element('#uploadPicture').send_keys(
-        os.path.abspath(
-            os.path.join(
-                os.path.dirname(tests.__file__), '../resources/test_pictures.webp'
-            )
-        )
-    )
-
-    browser.element('#currentAddress').type('Novotushinskiy proezd 8')
-
-    browser.element('#state').perform(command.js.scroll_into_view).click()
-    browser.all('[id^=react-select][id*=option]').element_by(
-        have.exact_text('Haryana')
-    ).click()
-    browser.element('#city').click()
-    browser.all('[id^=react-select][id*=option]').element_by(
-        have.exact_text('Panipat')
-    ).perform(command.js.click)
-
-    browser.element('#submit').perform(command.js.click)
+    practice_form.fill_name('Vladislav')
+    practice_form.fill_last_name('Kamenskiy')
+    practice_form.fill_email('dje.fry@mail.ru')
+    practice_form.select_gender('Male')
+    practice_form.fill_mobile_number('9162754427')
+    practice_form.select_date_of_birth(19, 8, 1994)
+    practice_form.select_subjects('English')
+    practice_form.select_hobbies('Sports')
+    practice_form.select_hobbies('Music')
+    practice_form.upload_picture('test_pictures.webp')
+    practice_form.current_address('Novotushinskiy proezd 8')
+    practice_form.select_state('Haryana')
+    practice_form.select_city('Panipat')
+    practice_form.submit()
 
     # THEN
-    browser.element('.table').all('td:nth-of-type(2)').should(
-        have.texts(
-            'Vladislav Kamenskiy',
-            'dje.fry@mail.ru',
-            'Male',
-            '9162754427',
-            '19 September,1994',
-            'English',
-            'Sports, Music',
-            'test_pictures.webp',
-            'Novotushinskiy proezd 8',
-            'Haryana Panipat',
-        )
+    practice_form.validation(
+        'Vladislav Kamenskiy',
+        'dje.fry@mail.ru',
+        'Male',
+        '9162754427',
+        '19 September,1994',
+        'English',
+        'Sports, Music',
+        'test_pictures.webp',
+        'Novotushinskiy proezd 8',
+        'Haryana Panipat',
     )
