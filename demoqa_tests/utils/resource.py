@@ -1,9 +1,7 @@
 import os
 
-from demoqa_tests import utils
+import resources
 
 
-def path(file):
-    return os.path.abspath(
-        os.path.join(os.path.dirname(utils.__file__), f'../../resources/{file}')
-    )
+def abs_path(file):
+    return os.path.abspath(os.path.join(os.path.dirname(resources.__file__), file))

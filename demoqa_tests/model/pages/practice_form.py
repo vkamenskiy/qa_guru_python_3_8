@@ -13,6 +13,9 @@ from demoqa_tests.utils import resource
 
 def given_opened():
     browser.open('/automation-practice-form')
+    browser.execute_script(
+        'document.querySelector(".body-height").style.transform = "scale(.5)"'
+    )
     ads = browser.all('[id^=google_ads][id$=container__]')
     ads.with_(timeout=10).should(have.size_greater_than_or_equal(3)).perform(
         command.js.remove
@@ -30,8 +33,8 @@ def select_city(value):
     dropdown.select('#city', by_text=value)
 
 
-def select_hobbies(value):
-    checkbox.select('[for^=hobbies-checkbox]', by_text=value)
+def select_hobbies(*texts: str):
+    checkbox.select('[for^=hobbies-checkbox]', by_texts=texts)
 
 
 def select_gender(value):
@@ -66,13 +69,13 @@ def fill_mobile_number(value):
     browser.element('#userNumber').type(value)
 
 
-def current_address(value):
+def fill_current_address(value):
     browser.element('#currentAddress').type(value)
 
 
 def upload_picture(file):
-    browser.element('#uploadPicture').send_keys(resource.path(file))
+    browser.element('#uploadPicture').send_keys(resource.abs_path(file))
 
 
-def validation(*data):
+def assert_submitted(*data):
     browser.element('.table').all('td:nth-of-type(2)').should(have.texts(data))
